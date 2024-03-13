@@ -1,3 +1,52 @@
+To install Java 17 on a Linux system and set the JAVA_HOME environment variable, follow these steps. 
+
+### For Ubuntu/Debian:
+
+1. **Update Package Index**:
+   ```bash
+   sudo apt update
+   ```
+
+2. **Install OpenJDK 17**:
+   ```bash
+   sudo apt install openjdk-17-jdk -y
+   ```
+
+3. **Set JAVA_HOME Environment Variable**:
+   - First, find out the path of your Java installation:
+     ```bash
+     sudo update-alternatives --config java
+     ```
+     From the output, copy the path of the installation. It usually looks something like `/usr/lib/jvm/java-17-openjdk-amd64`.
+   - Open `/etc/environment` in a text editor:
+     ```bash
+     sudo nano /etc/environment
+     ```
+   - Add the following line (replace `/your/java/path` with the path you copied):
+     ```
+     JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+     ```
+   - Save and exit the editor.
+   - Apply the changes:
+     ```bash
+     source /etc/environment
+     ```
+   - Verify that `JAVA_HOME` is set:
+     ```bash
+     echo $JAVA_HOME
+     ```
+To append the Java executable location to your system's `PATH` environment variable, ensuring that Java commands can be run from any terminal session, you need to modify the `PATH` variable by adding the path to the Java `bin` directory. This is slightly different from setting `JAVA_HOME`. Here's how you can do it:
+
+1. **Find Your Java Installation Path**: 
+   You've likely identified this in the previous steps. It's usually something like `/usr/lib/jvm/java-17-openjdk-amd64` for OpenJDK 17 on Ubuntu/Debian systems. Make sure to adjust the path according to your specific Java version and installation details.
+
+2. **Set PATH Environment Variable**:
+   - For a single session (temporary), you can set the `PATH` variable directly in the terminal:
+     ```bash
+     export PATH=$JAVA_HOME/bin:$PATH
+     ```
+
+
 ## Asssignment 1 for Web Engineering Course
 
 #### Introduction

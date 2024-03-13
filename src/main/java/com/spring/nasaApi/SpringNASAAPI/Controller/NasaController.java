@@ -10,10 +10,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Collections;
 import java.util.List;
 
+@CrossOrigin(
+    origins = {
+        "http://localhost:3000",
+        "https://3000-srikavya080-webengineer-2qnxntpyuu6.ws-us110.gitpod.io"
+        },
+    methods = {
+                RequestMethod.OPTIONS,
+                RequestMethod.GET,
+                RequestMethod.PUT,
+                RequestMethod.DELETE,
+                RequestMethod.POST
+})
 @RestController
 public class NasaController {
 
