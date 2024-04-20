@@ -5,8 +5,11 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import {useNavigate} from 'react-router-dom';
+
 
 function NavScrollExample() {
+  const nav = useNavigate();
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
@@ -18,8 +21,8 @@ function NavScrollExample() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="home">Home</Nav.Link>
-            <Nav.Link href="fetch">Form</Nav.Link>
+            <Nav.Link onClick={(e) => {e.preventDefault;nav('/home')}}>Home</Nav.Link>
+            <Nav.Link onClick={(e) => {e.preventDefault;nav('/fetch')}}>Form</Nav.Link>
             <Nav.Link href="https://github.com/Srikavya080496/WebEngineering">SpringbootRea Code</Nav.Link>
             <Nav.Link href="https://api.nasa.gov/">NASA Open APIs</Nav.Link>
           </Nav>

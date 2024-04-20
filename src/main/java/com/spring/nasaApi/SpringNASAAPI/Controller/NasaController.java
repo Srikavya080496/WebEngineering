@@ -32,8 +32,7 @@ import java.util.List;
 @RestController
 public class NasaController {
 
-    @Value("DEMO_KEY")
-    private String apiKey;
+    private String apiKey="rg6gbzupnDax7xQry6XXVr68bdcU5CHJS57hhGfd";
 
     private static final String APOD_URL = "https://api.nasa.gov/planetary/apod";
 

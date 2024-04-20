@@ -1,66 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Col, Row, Button, Container } from 'react-bootstrap';
+import { useStore } from "../store/apodLocalStore"
 
 const Fetcher = () => {
-    const formatDate = (date) => {
-        return new Date(date).toISOString().split('T')[0];
-      };
-    
-      const today = formatDate(new Date());
-  const [selectedForm, setSelectedForm] = useState('byDate');
-  const [date, setDate] = useState(today);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [count, setCount] = useState('');
-  const [imageData, setImageData] = useState([]);
-  const [fetchError, setFetchError] = useState(null);
 
-  const fetchData = async () => {
-    try {
-      let url = 'https://api.nasa.gov/planetary/apod?api_key=rg6gbzupnDax7xQry6XXVr68bdcU5CHJS57hhGfd&';
 
-      if (date) {
-        url += `date=${date}`;
-      } else if (startDate && endDate) {
-        url += `start_date=${startDate}&end_date=${endDate}`;
-      } else if (count) {
-        url += `count=${count}`;
-      }
 
-      const response = await fetch(url);
-      const data = await response.json();
-      if (Array.isArray(data)) {
-        setImageData(data);
-      } else {
-        setImageData([data]); // Ensure imageData is always an array for consistent mapping
-      }
-    } catch (error) {
-      setFetchError('Failed to fetch data');
-    }
-  };
+  const {
+    selectedForm,
+    date, setDate,
+    startDate, setStartDate,
+    endDate, setEndDate,
+    count, setCount,
+    imageData, fetchError, loading,
+    fetchData,
+    setForm,
+    resetDate
+  } = useStore(state => ({
+    selectedForm: state.selectedForm,
+    date: state.date,
+    setDate: state.setDate,
+    startDate: state.startDate,
+    setStartDate: state.setStartDate,
+    endDate: state.endDate,
+    setEndDate: state.setEndDate,
+    count: state.count,
+    setCount: state.setCount,
+    imageData: state.imageData,
+    fetchError: state.fetchError,
+    loading: state.loading,
+    fetchData: state.fetchData,
+    setForm: state.setForm,
+    resetDate : state.resetDate
+  }));
+
+  const { imageData2, fetchData2 } = useStore(state => ({
+    imageData2: state.imageData,
+    fetchData2: state.fetchData
+  }));
   
-
   useEffect(() => {
-    if (date || (startDate && endDate) || count) {
-      fetchData();
-    }
-  }, [date, startDate, endDate, count]);
+      fetchData2();
+    },[]);
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [selectedForm, date, startDate, endDate, count, fetchData]);
+
+  // useEffect(() => {
+  //   if (date || (startDate && endDate) || count) {
+  //     fetchData();
+  //   }
+  // }, [date, startDate, endDate, count]);
+
   useEffect(() => {
     // Clear state values when changing forms
-    setDate(today); // Reset to today for 'byDate'
+    resetDate();
     setStartDate('');
     setEndDate('');
     setCount('');
   }, [selectedForm]); // This effect runs when selectedForm changes
 
-  
+
 
   return (
     <Container>
-      <Card className="mb-4" style={{marginTop:'2rem',padding:'2rem'}}>
+      <Card className="mb-4" style={{ marginTop: '2rem', padding: '2rem' }}>
         <Row>
           <Col md={6}>
-            {imageData[0] && imageData[0].media_type==="image" &&(
+            {imageData[0] && imageData[0].media_type === "image" && (
               <Card.Img variant="top" src={imageData[0].url} alt="NASA APOD" />
             )}
           </Col>
@@ -68,7 +76,7 @@ const Fetcher = () => {
             <Form>
               <Form.Group controlId="formSelection">
                 <Form.Label>Select Form</Form.Label>
-                <Form.Control as="select" onChange={e => setSelectedForm(e.target.value)} value={selectedForm}>
+                <Form.Control as="select" onChange={e => setForm(e.target.value)} value={selectedForm}>
                   <option value="">Select...</option>
                   <option value="byDate">By Date</option>
                   <option value="byRange">By Date Range</option>
@@ -82,10 +90,10 @@ const Fetcher = () => {
                     <Form.Label>Date</Form.Label>
                     <Form.Control
                       type="date"
-                      onChange={e => setDate(e.target.value) } value={date}
+                      onChange={e => setDate(e.target.value)} value={date}
                     />
                   </Form.Group>
-                  <Button onClick={() => { setStartDate(''); setEndDate(''); setCount(''); }}>Fetch</Button>
+                  <Button onClick={() => { setStartDate(''); setEndDate(''); setCount('');fetchData(); }}>Fetch</Button>
                 </>
               )}
 
@@ -105,7 +113,7 @@ const Fetcher = () => {
                       onChange={e => setEndDate(e.target.value)}
                     />
                   </Form.Group>
-                  <Button onClick={() => { setDate(''); setCount(''); }}>Fetch</Button>
+                  <Button onClick={() => { setDate(''); setCount('');fetchData(); }}>Fetch</Button>
                 </>
               )}
 
@@ -118,7 +126,7 @@ const Fetcher = () => {
                       onChange={e => setCount(e.target.value)}
                     />
                   </Form.Group>
-                  <Button onClick={() => { setDate(''); setStartDate(''); setEndDate(''); }}>Fetch</Button>
+                  <Button onClick={() => { setDate(''); setStartDate(''); setEndDate('');fetchData(); }}>Fetch</Button>
                 </>
               )}
             </Form>
@@ -132,7 +140,7 @@ const Fetcher = () => {
             <Card>
               <Card.Body>
                 <Card.Title>{item.title}</Card.Title>
-                {item.media_type === "image" ? (
+                { item.url.toLowerCase().endsWith('.jpg') ? (
                   <Card.Img variant="top" src={item.url} />
                 ) : (
                   <iframe title={item.title} src={item.url} frameBorder="0" allowFullScreen></iframe>
@@ -147,8 +155,8 @@ const Fetcher = () => {
                   <b>date:</b> {item.date}
                 </Card.Text>
                 {item.copyright && <footer className="blockquote-footer">
-                
-                <b>Copyright :</b> { item.copyright}
+
+                  <b>Copyright :</b> {item.copyright}
                 </footer>}
               </Card.Body>
             </Card>
