@@ -40,27 +40,10 @@ const Fetcher = () => {
   }));
   
   useEffect(() => {
-      fetchData2();
-    },[]);
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [selectedForm, date, startDate, endDate, count, fetchData]);
-
-  // useEffect(() => {
-  //   if (date || (startDate && endDate) || count) {
-  //     fetchData();
-  //   }
-  // }, [date, startDate, endDate, count]);
-
-  useEffect(() => {
-    // Clear state values when changing forms
-    resetDate();
-    setStartDate('');
-    setEndDate('');
-    setCount('');
-  }, [selectedForm]); // This effect runs when selectedForm changes
-
+    if (imageData2.length === 0) {
+        fetchData2();
+    }
+}, []);
 
 
   return (
@@ -104,6 +87,7 @@ const Fetcher = () => {
                     <Form.Control
                       type="date"
                       onChange={e => setStartDate(e.target.value)}
+                      value={startDate}
                     />
                   </Form.Group>
                   <Form.Group controlId="endDate">
@@ -111,6 +95,7 @@ const Fetcher = () => {
                     <Form.Control
                       type="date"
                       onChange={e => setEndDate(e.target.value)}
+                      value={endDate}
                     />
                   </Form.Group>
                   <Button onClick={() => { setDate(''); setCount('');fetchData(); }}>Fetch</Button>
@@ -124,6 +109,7 @@ const Fetcher = () => {
                     <Form.Control
                       type="number"
                       onChange={e => setCount(e.target.value)}
+                      value={count}
                     />
                   </Form.Group>
                   <Button onClick={() => { setDate(''); setStartDate(''); setEndDate('');fetchData(); }}>Fetch</Button>
